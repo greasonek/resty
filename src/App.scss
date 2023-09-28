@@ -1,4 +1,4 @@
-$backgroundColor: #f3f1f6;
+$backgroundColor: #d6dbe8;
 
 html, body {
   height: 100%;
@@ -11,6 +11,7 @@ body {
   height: 100%;
   text-align: center;
   
+  
 
   #root {
     display: flex;
@@ -19,7 +20,7 @@ body {
   }
 
   footer {
-    background: darken($backgroundColor, 50);
+    background: darken($backgroundColor, 20);
     border-top: 1px solid #eee;
     padding: 1em 3em;
     margin: 0;
@@ -27,7 +28,7 @@ body {
   }
 
   header {
-    background: darken($backgroundColor, 75);
+    background: darken($backgroundColor, 50);
     border-bottom: 1px solid #eee;
     color: #eee;
     padding: 0;
