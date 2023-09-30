@@ -4,7 +4,7 @@ const Form = (props) => {
   const {appState, setAppState} = props;
   const [formData, setFormData] = useState({
     method:'GET',
-    url: 'https://pokeapi.co/api/v2/pokemon',
+    url: '',
     body: '',
   }); 
   const handleSubmit = e => {
@@ -12,7 +12,8 @@ const Form = (props) => {
     props.handleApiCall(formData);
   }
 const handleOnFormChange = (e) => {
-  setFormData({...formData, url: e.target.value});
+  const {name, value} = e.target;
+  setFormData({...formData, [name]: value});
 }
 
 const handleButtonClick = (e) => {
@@ -55,7 +56,7 @@ const handleTextArea = (e) => {
         style={{background:'ivory', margin: '5px', borderRadius: '5px'}}>DELETE</button>
       </label>
     {(formData.method === 'post' || formData.method === 'put') && <textarea rows='12' cols='33' value={formData.body} onChange={handleTextArea}
-    style={{
+    name='body' style={{
       marginTop: '10px',
       padding: '5px',
       borderRadius: '5px',
