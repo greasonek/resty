@@ -34,6 +34,8 @@ const App = () => {
         <Header />
         <div>Request Method: {appState.requestParams.method}</div>
         <div>URL: {appState.requestParams.url}</div>
+        {/* {appState.requestParams.body} &&
+        <div>appState.requestParams.body</div> */}
         <Form handleApiCall={callApi} />
         <Results data={appState.data} />
         <Footer />
