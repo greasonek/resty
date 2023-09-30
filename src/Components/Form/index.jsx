@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const Form = (props) => {
-  const {appState, setAppState} = props;
+  // const {appState, setAppState} = props;
   const [formData, setFormData] = useState({
     method:'GET',
     url: '',
@@ -30,13 +30,21 @@ const handleTextArea = (e) => {
     <form onSubmit={handleSubmit} style={{ textAlign: 'center'}}>
       <label >
         <span><b>URL</b>: </span>
-        <input name='url' type='text' value={formData.url} onChange={handleOnFormChange}
-        style={{
-          marginRight: '10px',
-          padding: '10px',
-          borderRadius: '5px'
+        <input 
+          data-testid='formInput' 
+          name='url' 
+          type='text' 
+          value={formData.url} 
+          onChange={handleOnFormChange}
+          style={{
+            marginRight: '10px',
+            padding: '10px',
+            borderRadius: '5px'
         }}/>
-        <button type="submit" onClick={() => setAppState({appState})} 
+        <button 
+        data-testid ='goButton' 
+        type="submit" 
+        onClick={() => {handleButtonClick}} 
         style={{
           background: 'ivory',
           color: 'black',
@@ -55,8 +63,14 @@ const handleTextArea = (e) => {
         <button id="delete" onClick={handleButtonClick}
         style={{background:'ivory', margin: '5px', borderRadius: '5px'}}>DELETE</button>
       </label>
-    {(formData.method === 'post' || formData.method === 'put') && <textarea rows='12' cols='33' value={formData.body} onChange={handleTextArea}
-    name='body' style={{
+    {(formData.method === 'post' || formData.method === 'put') && <textarea 
+    data-testid='inputText' 
+    rows='12' 
+    cols='33' 
+    value={formData.body} 
+    onChange={handleTextArea}
+    name='body' 
+    style={{
       marginTop: '10px',
       padding: '5px',
       borderRadius: '5px',
