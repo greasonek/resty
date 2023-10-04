@@ -45,6 +45,22 @@ Utilize Airbnb React/JSX Style Guide conventions.
 Unit tests are placed in the component directory (testing one file only).
 Integration tests are placed in the __tests__ directory (testing more than one file).
 
+## LAB 29 - useReducer, useMemo, useCalback
+
+**Technical Requirements / Note**
+
+- Refactor your state management within the App component to use the useReducer() hook.
+
+- Replace any component state managements to use derived state from useReducer() with a reducer function and initial state.
+Suggested approach:
+
+<App />: Use a reducer to store and manage all application state: loading, results, history.
+Add to history array in state after every api call method, url, results (json).
+
+<History />: Iterates the history array in state and shows the previous API calls.
+When one is clicked on, show the results in the results component.
+Note: the results component renders whatever is in state.
+
 ## Lab 28 Requirements
 
 Technical Requirements / Note
@@ -61,4 +77,5 @@ Suggested approach:
 <App /> updates state with the results of the API Request.
 <Results /> sees the new API data as a prop and renders the JSON. The JSON data should be complete. i.e. not only include results, but also include pagination data if present (next, previous and count), if using axios.
 Note: update your <Results /> component to use a 3rd party component to “pretty print” the JSON in a color-coded, user-friendly format.
+
 
