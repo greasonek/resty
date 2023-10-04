@@ -60,3 +60,22 @@ Add to history array in state after every api call method, url, results (json).
 <History />: Iterates the history array in state and shows the previous API calls.
 When one is clicked on, show the results in the results component.
 Note: the results component renders whatever is in state.
+
+## Lab 28 Requirements
+
+Technical Requirements / Note
+Extend your application to include the ability to send http requests and display response data, when the <Form /> component experiences a submission event.
+
+Refactor application methods to allow for browser side HTTP requests to be sent.
+Your implementation should allow the user to set a url, method, and request body.
+Make sure all relevant request and response data is displayed to the User.
+Suggested approach:
+
+<Form /> component, onSubmit() sends the user’s entries to the <App /> via method sent in through props.
+<App /> does a check on the request data from the form and updates the request variable in state with the url, method, and potentially the body.
+<App /> has an effect hook that’s looking for changes to the request variable in state, and in response, runs the API request with the new request options from state.
+<App /> updates state with the results of the API Request.
+<Results /> sees the new API data as a prop and renders the JSON. The JSON data should be complete. i.e. not only include results, but also include pagination data if present (next, previous and count), if using axios.
+Note: update your <Results /> component to use a 3rd party component to “pretty print” the JSON in a color-coded, user-friendly format.
+
+
