@@ -42,6 +42,8 @@ const App = () => {
       </React.Fragment>
     );
 }
+export default App;
+
 // class App extends React.Component {
 
   // constructor(props) {
@@ -77,5 +79,3 @@ const App = () => {
   //   );
   // }
 // }
-
-export default App;
