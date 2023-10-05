@@ -35,13 +35,13 @@ function reducerFunction(state, action) {
     case 'ACTIVATE_CHARACTER':
       return {
         ...state, 
-        active: state.characters.find(char => char.name === action.payload)
+        active: state.characters.find(char => char.name === action.payload),
       } 
     case 'REMOVE_CHARACTER':
       return {
         ...state,
         active: {},
-        characters: state.characters.filter((char) => char.name != action.payload)
+        characters: state.characters.filter((char) => char.name !== action.payload),
       }
   }
 }
@@ -61,37 +61,48 @@ const Characters = () => {
     const action = {
       type: 'ADD_CHARACTER',
       payload: char
-    }
+    };
     dispatch(action);
-  }
+  };
 
   const handleActivateCharacter = (name) => {
     const action = {
       type:'',
       payload: name
-    }
+    };
     dispatch(action);
+  };
 
   const handleRemoveCharacter = (nameofCharacterToRemove) => {
     const action = {
       type: 'REMOVE_CHARACTER',
-      payload: name,
+      payload: nameofCharacterToRemove,
     }
     dispatch(action);
   }
-  }
-  return <div>
+  
+
+  return (
+  <div>
     <h1>Characters in The Office</h1>
     <strong>
       {state.active.name ? `${state.active.name} is ${state.active.color}` 
       : 'Click a character to learn their secret'}
     </strong>
     <ul>
-      {state.characters.map(char => <li key={char.name} 
-      onClick={() => handleActivateCharacter(char.name)}>{char.name}</li>)}
-      onDoubleClick={()=> handleRemoveCharacter(char.name)}
+      {state.characters.map((char) => (
+        <li 
+          key={char.name} 
+          onClick={() => handleActivateCharacter(char.name)}
+          onDoubleClick={()=> handleRemoveCharacter(char.name)}
+          >
+          {char.name}
+          </li>
+        ))}
     </ul>
-    </div>;
-}
+    <button onClick={handleNewCharacter}>Add Random Character</button>
+  </div>
+  );
+      };
 
 export default Characters;

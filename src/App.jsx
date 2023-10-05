@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.scss';
-
+import { useReducer } from 'react';
 
 // Let's talk about using index.js and some other name in the component folder.
 // There's pros and cons for each way of doing this...
@@ -12,11 +12,83 @@ import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
 
-const App = () => {
-  const [appState, setAppState] = useState({
-        data: {},
-        requestParams: {},
-      });
+
+const initialStateValue = {
+  data: {},
+  requestParams: {},
+};
+
+function appReducer(appState, action) {
+  switch (action.type) {
+    case 'SET_REQUEST':
+      return {
+        ...appState, 
+        requestParams: action.payload, 
+        data: {}
+      };
+    case 'SET_DATA':
+      return {
+        ...appState,
+        data: action.payload,
+      };
+  }
+}
+
+const History = () => {
+  const [appState, dispatch] = useReducer(appReducer, initialStateValue);
+
+  const callApi = async (requestParams) => {
+    const action = {
+      type: 'SET_REQUEST', 
+      payload: requestParams
+    }
+    dispatch(action);
+  };
+
+  useEffect( () => {
+    // //   // can do anything
+      if(!appState.requestParams.url) return;
+      if(appState.data && Object.keys(appState.data).length) return;
+      console.log('made it!');
+      (async () => {
+        // const url = appState.requestParams.url;
+        // const method = appState.requestParams.method;
+        // console.log(url, method);
+        // make the request to get back data
+            const { data } = await axios.get(appState.requestParams.url);
+            console.log(appState);
+            // setAppState({...appState, data});
+            dispatch({type: 'SET_DATA', payload: data });
+          })();
+
+          return () => {
+            console.log('component unmounts');
+          };
+            // be careful that you don't create a circular dependency 
+            // where the state of the thing you're watching changes everytime the function runs
+          
+        }, [appState]);
+
+      
+
+  // const handleNewApi = () => {
+  //   const api = {
+  //     url: chance.url(),
+  //     method: 'get',
+  //   };
+
+  //   const action = {
+  //     type: 'ADD_API',
+  //     payload: data,
+  //   };
+  //   dispatch(action);
+  // };
+// }
+// const App = () => {
+//   const [appState, setAppState] = useState({
+//         data: {},
+//         requestParams: {},
+//       });
 
       // const getData = async () => {
       //   const { data } = await axios.get(appState.requestParams.url);
@@ -28,21 +100,12 @@ const App = () => {
       // use a useEffect to do this
 
       // useEffect is a hook - takes 2 arguments: callback function and dependency array
-      useEffect(() => {
-      // //   // can do anything
-        if(!appState.requestParams.url) return;
-        if(appState.data && Object.keys(appState.data).length) return;
-        console.log('made it!');
-        (async () => {
-          const url = appState.requestParams.url;
-          const method = appState.requestParams.method;
-          console.log(url, method);
-          // make the request to get back data
-          // const request = 
-            // async () => {
-              const { data } = await axios.get(appState.requestParams.url);
-              console.log(appState);
-              setAppState({...appState, data});
+   
+              // const action = {
+                // type: DONE
+                // payload: data
+              //}
+              //dispatch(action)
             // }
           // const request = {
           //   data: {
@@ -59,20 +122,9 @@ const App = () => {
           // saying {...appState, pizza: 'yum'} means: 
           // {data, requestParams, pizza: 'yum' }
           // setAppState({...appState, data: request.data});
-        })();
-        return () => {
-          console.log('component unmounts');
-        };
-          // be careful that you don't create a circular dependency 
-          // where the state of the thing you're watching changes everytime the function runs
-        
-      }, [appState]);
+     
 
-  const callApi = (requestParams) => {
-    setAppState({data: {}, requestParams});
-  }
-
-    return (
+return (
       <React.Fragment>
         <Header />
         <div>Request Method: {appState.requestParams.method}</div>
@@ -81,11 +133,10 @@ const App = () => {
         <div>appState.requestParams.body</div> */}
         <Form handleApiCall={callApi} />
     {Object.keys(appState.data).length > 0 && <Results data={appState.data} />}        
-    <Footer />
+        <Footer />
       </React.Fragment>
     );
-}
-
+};
 export default App;
 
 // class App extends React.Component {
