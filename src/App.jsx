@@ -1,21 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import './App.scss';
-import { useReducer } from 'react';
-
-// Let's talk about using index.js and some other name in the component folder.
-// There's pros and cons for each way of doing this...
-// OFFICIALLY, we have chosen to use the Airbnb style guide naming convention. 
-// Why is this source of truth beneficial when spread across a global organization?
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
 
-
 const initialStateValue = {
   data: {},
   requestParams: {},
+  loading: false,
+  history: []
 };
 
 function appReducer(appState, action) {
@@ -24,13 +19,30 @@ function appReducer(appState, action) {
       return {
         ...appState, 
         requestParams: action.payload, 
-        data: {}
+        data: {},
+        loading: true,
       };
     case 'SET_DATA':
       return {
         ...appState,
-        data: action.payload,
+        // data: action.payload,
+        loading: false,
+        data: action.data,
+        history: [
+          ...appState.history, { 
+            requestParams: appState.requestParams,
+            data: action.payload,
+          }]
       };
+    case 'HISTORY_DATA':
+      return {
+        ...appState,
+        loading: 'history',
+        data: action.data,
+        requestParams: action.requestParams,
+      };
+    default:
+        return appState;
   }
 }
 
@@ -40,35 +52,69 @@ const History = () => {
   const callApi = async (requestParams) => {
     const action = {
       type: 'SET_REQUEST', 
-      payload: requestParams
-    }
+      payload: requestParams,
+    };
     dispatch(action);
   };
 
-  useEffect( () => {
-    // //   // can do anything
-      if(!appState.requestParams.url) return;
-      if(appState.data && Object.keys(appState.data).length) return;
-      console.log('made it!');
+  const historyData = (req) => {
+    const action = {
+      type: 'SET_DATA',
+      payload: req,
+    };
+    dispatch(action)
+  };
+
+  useEffect(() => {
+    if(appState.laoding === true && appState.requestParams.method && appState.requestParams.url) {
+      // if(!appState.requestParams.url) return;
+      // if(appState.data && Object.keys(appState.data).length) {
       (async () => {
-        // const url = appState.requestParams.url;
-        // const method = appState.requestParams.method;
-        // console.log(url, method);
-        // make the request to get back data
-            const { data } = await axios.get(appState.requestParams.url);
-            console.log(appState);
-            // setAppState({...appState, data});
-            dispatch({type: 'SET_DATA', payload: data });
-          })();
-
-          return () => {
-            console.log('component unmounts');
-          };
-            // be careful that you don't create a circular dependency 
-            // where the state of the thing you're watching changes everytime the function runs
+      const res = await axios.get({
+        method: appState.requestParams.method,
+        url: appState.requestParams.url,
+      });
+      const historyObj = {res};
+      const action = {
+        type: 'SET_DATA', 
+        payload: res.data,
+        history: historyObj
+      };
+      dispatch(action);
+    })();
+    return() => {
+      console.log('component unmounts');
+    } 
+    }
+   }, [appState] );
+  
+  // }, [appState.requestParams]);
+    
+        //   return () => {
+        //     console.log('component unmounts');
+        //   };
           
-        }, [appState]);
+        // }, [appState]);
 
+        return (
+              <React.Fragment>
+                <Header />
+                <div>Request Method: {appState.requestParams.method}</div>
+                <div>URL: {appState.requestParams.url}</div>
+                {/* {appState.requestParams.body} &&
+                <div>appState.requestParams.body</div> */}
+                <Form handleApiCall={callApi} />
+            {/* {Object.keys(appState.data).length > 0 && <Results data={appState.data} />}         */}
+                <main>
+                  <History history={appState.history} historyData={historyData} />
+                  <Results loading={appState.loading} data={appState.data} />
+                </main>
+                <Footer />
+              </React.Fragment>
+            );
+        }
+
+        export default History;
       
 
   // const handleNewApi = () => {
@@ -124,20 +170,6 @@ const History = () => {
           // setAppState({...appState, data: request.data});
      
 
-return (
-      <React.Fragment>
-        <Header />
-        <div>Request Method: {appState.requestParams.method}</div>
-        <div>URL: {appState.requestParams.url}</div>
-        {/* {appState.requestParams.body} &&
-        <div>appState.requestParams.body</div> */}
-        <Form handleApiCall={callApi} />
-    {Object.keys(appState.data).length > 0 && <Results data={appState.data} />}        
-        <Footer />
-      </React.Fragment>
-    );
-};
-export default App;
 
 // class App extends React.Component {
 
