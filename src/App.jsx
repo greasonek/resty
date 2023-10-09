@@ -5,6 +5,7 @@ import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
+import History from './Components/History';
 
 const initialStateValue = {
   data: {},
@@ -46,7 +47,7 @@ function appReducer(appState, action) {
   }
 }
 
-const History = () => {
+const App = () => {
   const [appState, dispatch] = useReducer(appReducer, initialStateValue);
 
   const callApi = async (requestParams) => {
@@ -114,7 +115,7 @@ const History = () => {
             );
         }
 
-        export default History;
+        export default App;
       
 
   // const handleNewApi = () => {
