@@ -26,14 +26,11 @@ function appReducer(appState, action) {
     case 'SET_DATA':
       return {
         ...appState,
-        // data: action.payload,
+        data: action.payload,
         loading: false,
-        data: action.data,
+        // data: action.data,
         history: [
-          ...appState.history, { 
-            requestParams: appState.requestParams,
-            data: action.payload,
-          }]
+          ...appState.history, action.history]
       };
     case 'HISTORY_DATA':
       return {
@@ -60,22 +57,22 @@ const App = () => {
 
   const historyData = (req) => {
     const action = {
-      type: 'SET_DATA',
+      type: 'HISTORY_DATA',
       payload: req,
     };
-    dispatch(action)
+    dispatch(action);
   };
 
   useEffect(() => {
-    if(appState.laoding === true && appState.requestParams.method && appState.requestParams.url) {
+    if(appState.loading === true && appState.requestParams.method && appState.requestParams.url) {
       // if(!appState.requestParams.url) return;
       // if(appState.data && Object.keys(appState.data).length) {
       (async () => {
-      const res = await axios.get({
-        method: appState.requestParams.method,
-        url: appState.requestParams.url,
-      });
-      const historyObj = {res};
+      const res = await axios.get(
+        appState.requestParams.url
+        );
+      console.log(res.data);
+      const historyObj = {url: appState.requestParams.url, method: appState.requestParams.method, data: res.data};
       const action = {
         type: 'SET_DATA', 
         payload: res.data,
